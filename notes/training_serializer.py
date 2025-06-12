@@ -15,10 +15,10 @@ training_serializer
 % brew cleanup	# Удаляет старые версии пакетов
 
 % pip install django==4.2.1
-% django-admin startproject training_serializer .  ( 💠Точка (.) в конце говорит Django, что не надо создавать лишнюю вложенную папку!)    
+% django-admin startproject training_serializer .  ( 💠Точка (.) в конце говорит Django, что не надо создавать лишнюю вложенную папку!)
 
 python manage.py runserver
-python manage.py startapp myapi 
+python manage.py startapp myapi
 
 	INSTALLED_APPS = [
 	    'django.contrib.admin',
@@ -29,36 +29,37 @@ python manage.py startapp myapi
 	    'django.contrib.staticfiles',
 	    'myapi.apps.MyapiConfig',
 	]
-	
+
 python manage.py migrate
 python manage.py createsuperuser
 
-	Username (leave blank to use 'heyartem'):art 
-	Email address: 
+	Username (leave blank to use 'heyartem'):art
+	Email address:
 	Password: 0000
 	Password (again): 0000
-	
+
 python manage.py runserver
 
 myapi/models.py
 	from django.db import models
-	
+
 	class Hero (models.Model):
 	    name = models.CharField(max_length=60)
 	    alias = models.CharField(max_length=60)
-	
+
 	    def __str__(self):
 	        return self.name
-	    
-	
+
+
 python manage.py makemigrations
 python manage.py migrate
 
 
 myapi/admin.py
 	from django.contrib import admin
+
 	from .models import Hero
-	
+
 	admin.site.register(Hero)
 
 Заполнил БД
@@ -74,15 +75,16 @@ pip install djangorestframework
 	    'django.contrib.staticfiles',
 	    'myapi.apps.MyapiConfig',
 	    'rest_framework',
-	
+
 	]
-	
+
 ! myapi/serializers.py
 
 myapi/serializers.py
 	from rest_framework import serializers
+
 	from .models import Hero
-	
+
 	class HeroSerializer(serializers.HyperlinkedModelSerializer):
 	    class Meta:
 	        model = Hero
@@ -90,16 +92,17 @@ myapi/serializers.py
 	            'name',
 	            'alias'
 	        )
-	        
+
 myapi/views.py
 	from django.shortcuts import render
 	from rest_framework import viewsets
-	from .serializers import HeroSerializer
+
 	from .models import Hero
-	
+	from .serializers import HeroSerializer
+
 	class HeroViewSet(viewsets.ModelViewSet):
 	    '''
-	    ModelViewSet - это специальное представление, которое предоставляет Django Rest Framework. 
+	    ModelViewSet - это специальное представление, которое предоставляет Django Rest Framework.
 	    Он будет обрабатывать GET и POST для Heroe без дополнительной работы.
 	    На практике оно не очень!
 	    '''
@@ -108,8 +111,8 @@ myapi/views.py
 
 training_serializer/urls.py
 	from django.contrib import admin
-	from django.urls import path, include
-	
+	from django.urls import include, path
+
 	urlpatterns = [
 	    path('admin/', admin.site.urls),
 	    path('', include('myapi.urls')),
@@ -118,8 +121,9 @@ training_serializer/urls.py
 ! myapi/urls.py
 myapi/urls.py
 
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework import routers
+
 from . import views
 
 router = routers.DefaultRouter()
@@ -134,23 +138,23 @@ urlpatterns = [
 python manage.py runserver
 
 	http://127.0.0.1:8000/
-	
+
 			HTTP 200 OK
 			Allow: GET, HEAD, OPTIONS
 			Content-Type: application/json
 			Vary: Accept
-			
+
 			{
 			    "heroes": "http://127.0.0.1:8000/heroes/"
 			}
-			
+
 
 	http://127.0.0.1:8000/heroes/
 		HTTP 200 OK
 		Allow: GET, POST, HEAD, OPTIONS
 		Content-Type: application/json
 		Vary: Accept
-		
+
 		[
 		    {
 		        "name": "Дэдпул",
@@ -161,14 +165,14 @@ python manage.py runserver
 		        "alias": "Ло́ган"
 		    }
 		]
-		
-	
+
+
 	http://127.0.0.1:8000/heroes/1/
 		HTTP 200 OK
 		Allow: GET, PUT, PATCH, DELETE, HEAD, OPTIONS
 		Content-Type: application/json
 		Vary: Accept
-		
+
 		{
 		    "id": 1,
 		    "name": "Дэдпул",
@@ -179,12 +183,12 @@ python manage.py runserver
 http://127.0.0.1:8000/heroes/ (в post-form)
 	Captain America
 	Первый Мститель, Суперсолдат
-	
+
 	HTTP 200 OK
 	Allow: GET, POST, HEAD, OPTIONS
 	Content-Type: application/json
 	Vary: Accept
-	
+
 	[
 	    {
 	        "id": 5,
@@ -215,8 +219,25 @@ http://127.0.0.1:8000/heroes/ (в post-form)
 
 
 
+🚸 🚸 🚸 🚸 🚸 🚸 🚸 Памятка pre-commit 🚸 🚸 🚸 🚸 🚸 🚸 🚸
+
 pip install pre-commit
-❗️.pre-commit-config.yaml
+pre-commit install		✅ Это настроит автоматический запуск хуков при каждом git commit.
+
+Использование
+	git add .
+	git commit -m "Test pre-commit" 		✅ Сработает на этом шаге, повторять эти шаги, пока ошибки не исчезнут
+
+
+		🧠 Полезные команды
+	pre-commit install          	-Устанавливает git hook
+	pre-commit run              	-Запускает все хуки вручную
+	pre-commit run --all-files    	-Прогоняет все файлы через проверки
+	pre-commit uninstall        	 -Удаляет git hook
+	git commit -m "Твой комментарий к коммиту" --no-verify        	 -Обход pre-commit
+
+
+.pre-commit-config.yaml (❕добавил в исключение папку notes/)
 	repos:
 	  - repo: https://github.com/pre-commit/pre-commit-hooks
 	    rev: v4.4.0
@@ -225,59 +246,75 @@ pip install pre-commit
 	      - id: end-of-file-fixer
 	      - id: check-yaml
 	      - id: check-json
-	
+
 	  - repo: https://github.com/psf/black
 	    rev: 23.9.1
 	    hooks:
 	      - id: black
 	        require_serial: true
-	
+	        exclude: ^notes/
+
 	  - repo: https://github.com/pre-commit/mirrors-isort
 	    rev: v5.10.1
 	    hooks:
 	      - id: isort
 	        args: [ "--profile", "black" ]
-	
+	        exclude: ^notes/
+
 	  - repo: https://github.com/PyCQA/flake8
 	    rev: 6.1.0
 	    hooks:
 	      - id: flake8
 	        args: [--max-line-length=200]
-	        exclude: |
-	          (?x)(
-	              ^models_app/admin/__init__.py|
-	              ^models_app/models/__init__.py|
-	              ^models_app/migrations/
-	          )
-	
-	
+	        exclude:
+	          '^notes/|
+	          ^models_app/admin/__init__.py|
+	          ^models_app/models/__init__.py|
+	          ^models_app/migrations/'
+
 	  - repo: https://github.com/asottile/pyupgrade
 	    rev: v3.11.0
 	    hooks:
 	      - id: pyupgrade
-	
-	
-	
+	        exclude: ^notes/
+
+
+
 	#trailing-whitespace
 	#  проверки конечных пробелов
-	
+
 	#end-of-file-fixer
 	#  Следит за тем, чтобы файлы заканчивались новой строкой и только новой строкой.
-	
+
 	#check-yaml
 	#  Пытается загрузить все файлы YAML для проверки синтаксиса.
-	
+
 	#check-json
 	#  Пытается загрузить все файлы JSON для проверки синтаксиса.
-	
+
 	#black
 	#  единый стиль кода, форматирование, единообразие
-	
+
 	#isort
 	#  для сортировки импорта в алфавитном порядке и автоматического разделения на разделы и по типу.
-	
+
 	#pyupgrade
 	#  для автоматического обновления синтаксиса для новых версий языка.
+
+
+Можно также игнорировать отдельные файлы:
+	exclude: notes/training_serializer.py
+	exclude: 'notes/.*\.py'  # Игнорирует все .py в папке notes
+
+		🧠 Объяснение регулярки:
+	^notes/ 	-Начинается с notes/→ игнорируем всю папку
+	^models_app/admin/__init__.py	 -точный путь к файлу
+	^models_app/migrations/	 -вся папка migrations
+
+
+🚸 🚸 🚸 🚸 🚸 🚸 🚸 🚸 🚸 🚸 🚸 🚸 🚸 🚸 🚸 🚸 🚸 🚸 🚸 🚸 🚸
+
+
 
 
 
@@ -287,13 +324,13 @@ pip install pre-commit
 
 
 ❗️.gitignore
-	
-	
-	
+
+
+
 
 pip freeze > requirements.txt
 
-* * * * Показать структуру проекта в графическом виде: * * * *	
+* * * * Показать структуру проекта в графическом виде: * * * *
 	brew install tree  # для macOS 	# Если tree не установлен, сначала установи его:
 	tree	# вывести дерево папок:
 	tree -L 2	# показать только 2-3 уровня вложенности:
@@ -302,19 +339,6 @@ pip freeze > requirements.txt
 
 
 git init
-git add . 
+git add .
 git status
 git commit -m "initial"
-
-
-
-
-
-
-
-	
-
-
-
-
-

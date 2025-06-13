@@ -337,8 +337,22 @@ pip freeze > requirements.txt
 	tree > structure.txt
 * * * * * * * * * * * * * * * *
 
+🔱  🔱  🔱  🔱  🔱  🔱  🔱 GIT памятка 🔱  🔱  🔱  🔱  🔱  🔱  🔱  🔱  🔱
+✅ 1 запуск
+	git init
+	git add .
+	git status
+	git commit -m "initial"
+	creat new rep on https://github.com/HeyArtem/
+	git branch -M main
+	git remote add origin git@github.com:HeyArtem/training_serializer.git
+	git push -u origin main
+	git status
 
-git init
-git add .
-git status
-git commit -m "initial"
+✅ Добавить сделанные изменения
+	git status	 # Не залитые файлы - красные
+	git add .
+	git commit -m "add README.md"
+	git push
+
+🔱  🔱  🔱  🔱  🔱  🔱  🔱  🔱  🔱  🔱  🔱  🔱  🔱  🔱  🔱  🔱

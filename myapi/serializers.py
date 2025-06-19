@@ -2,14 +2,18 @@ from rest_framework import serializers
 
 from .models import Hero
 
-
-class HeroSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Hero
-        fields = ("id", "name", "alias")
+"""
+    Все сериалайзеры
+"""
 
 
-class ListHeroSerializer(serializers.ModelSerializer):
+class HeroSerializer(serializers.ModelSerializer):
+    """
+    Дефолтный сериалайзер.
+        APIView: чтение & Создание
+        Дженерики: чтение и создание
+    """
+
     class Meta:
         model = Hero
         fields = [
@@ -21,3 +25,9 @@ class ListHeroSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+
+
+class HeroSerializerS(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Hero
+        fields = ("id", "name", "alias")
